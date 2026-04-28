@@ -257,7 +257,6 @@ namespace SerialCommunication
 
                 // Gewenste temperatuur (A0)
                 serialPortArduino.WriteLine("get a0");
-
                 if (!serialPortArduino.IsOpen)
                     return;
                 serialPortArduino.ReadExisting();

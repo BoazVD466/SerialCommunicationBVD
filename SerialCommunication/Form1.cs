@@ -119,7 +119,7 @@ namespace SerialCommunication
                 buttonConnect.Text = "Connect";
             }
         }
-
+        //Oefening1
         private void checkBoxDigital2_CheckedChanged(object sender, EventArgs e)
         {
             try
@@ -140,7 +140,7 @@ namespace SerialCommunication
                 buttonConnect.Text = "Connect";
             }
         }
-
+        //Oefening2
         private void checkBoxDigital3_CheckedChanged(object sender, EventArgs e)
         {
             try
@@ -244,8 +244,9 @@ namespace SerialCommunication
         {
             timerOefening5.Enabled = tabControl.SelectedIndex == 5;
             timerOefening4.Enabled = tabControl.SelectedIndex == 4;
+            timerOefening3.Enabled = tabControl.SelectedIndex == 3;
         }
-
+        //Oefening5
         private void timerOefening5_Tick(object sender, EventArgs e)
         {
 
@@ -271,7 +272,6 @@ namespace SerialCommunication
                 labelGewensteTemp.Text = gewensteTemp.ToString("0.0") + " °C";
                 // Huidige temperatuur (A1)
                 serialPortArduino.WriteLine("get a1");
-
                 if (!serialPortArduino.IsOpen)
                     return;
                 serialPortArduino.ReadExisting();
@@ -281,11 +281,12 @@ namespace SerialCommunication
                     return;
                 if (!int.TryParse(antwoord2.Substring(4), out int rawHuidig))
                     return;
-                
+                if (rawHuidig < 20)   
+                    return;
                 double ruw = rawHuidig * 500 / 1023.0;
                 double huidigeTemp = ruw / 10;
-
                 labelHuidigeTemp.Text = huidigeTemp.ToString("0.0") + " °C";
+
 
                 // LED aansturen
                 if (huidigeTemp < gewensteTemp)
@@ -303,7 +304,7 @@ namespace SerialCommunication
 
 
         }
-
+        //Oefening4
         private void timerOefening4_Tick(object sender, EventArgs e)
         {
             try
@@ -330,5 +331,46 @@ namespace SerialCommunication
                 buttonConnect.Text = "Connect";
             }
         }
+        //Oefening3
+        private void timerOefening3_Tick(object sender, EventArgs e)
+        {
+            try
+            {
+                if (serialPortArduino.IsOpen)
+                {
+                    //Button5
+                    serialPortArduino.ReadExisting();
+                    string commando= "get d5";
+                    serialPortArduino.WriteLine(commando);
+                    string antwoord = serialPortArduino.ReadLine();
+                    antwoord = antwoord.TrimEnd();
+                    antwoord = antwoord.Substring(4);
+                    radioButtonDigital5.Checked = (antwoord == "1");
+                    //Button6
+                    commando = "get d6";
+                    serialPortArduino.WriteLine(commando);
+                    antwoord = serialPortArduino.ReadLine();
+                    antwoord = antwoord.TrimEnd();
+                    antwoord = antwoord.Substring(4);
+                    radioButtonDigital6.Checked = (antwoord == "1");
+                    //Button7
+                    commando = "get d7";
+                    serialPortArduino.WriteLine(commando);
+                    antwoord = serialPortArduino.ReadLine();
+                    antwoord = antwoord.TrimEnd();
+                    antwoord = antwoord.Substring(4);
+                    radioButtonDigital7.Checked = (antwoord == "1");
+                }
+            }
+            catch (Exception exception)
+            {
+                labelStatus.Text = "Error: " + exception.Message;
+                serialPortArduino.Close();
+                radioButtonVerbonden.Checked = false;
+                buttonConnect.Text = "Connect";
+            }
+        }
+        
+
     }
 }
